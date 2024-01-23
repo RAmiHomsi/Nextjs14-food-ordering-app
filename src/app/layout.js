@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/layouts/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,7 +13,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
       <body className={inter.className}>
-        <main className="max-w-4xl mx-auto p-4">{children}</main>
+        <main className="max-w-4xl mx-auto p-4">
+          <Header />
+          {children}
+        </main>
       </body>
     </html>
   );
