@@ -1,39 +1,49 @@
-import NextAuth from "next-auth";
+//import clientPromise from "@/libs/mongoConnect";
+import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
+import { User } from "@/app/models/User";
+import NextAuth, { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+//import { MongoDBAdapter } from "@auth/mongodb-adapter"
 
-const handler = NextAuth({
+export const authOptions = {
+  secret: process.env.SECRET,
+  //adapter: MongoDBAdapter(clientPromise),
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
+      id: "credentials",
       credentials: {
         username: {
           label: "Email",
           type: "email",
-          placeholder: "example@hotmail.com",
+          placeholder: "test@example.com",
         },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
+        const email = credentials?.email;
+        const password = credentials?.password;
 
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
+        mongoose.connect(process.env.MONGO_URL);
+        const user = await User.findOne({ email });
+        const passwordOk = user && bcrypt.compareSync(password, user.password);
+
+        if (passwordOk) {
           return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
         }
+
+        return null;
       },
     }),
   ],
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

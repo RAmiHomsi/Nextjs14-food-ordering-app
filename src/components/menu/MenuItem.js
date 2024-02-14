@@ -1,19 +1,134 @@
-import React from "react";
+import { useContext, useState } from "react";
+import toast from "react-hot-toast";
+import { CartContext } from "../AppContext";
+import MenuItemTile from "./MenuItemTile";
+import Image from "next/image";
 
-export default function MenuItem() {
+export default function MenuItem(menuItem) {
+  const { image, name, description, basePrice, sizes, extraIngredientPrices } =
+    menuItem;
+  const [showPopup, setShowPopup] = useState(false);
+  const { addToCart } = useContext(CartContext);
+  const [selectedSize, setSelectedSize] = useState(sizes?.[0] || null);
+  const [selectedExtras, setSelectedExtras] = useState([]);
+
+  async function handleAddToCartButtonClick() {
+    const hasOptions = sizes.length > 0 || extraIngredientPrices.length > 0;
+    if (hasOptions && !showPopup) {
+      setShowPopup(true);
+      return;
+    }
+    addToCart(menuItem, selectedSize, selectedExtras);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setShowPopup(false);
+  }
+
+  async function handleExtraThingClick(ev, extraThing) {
+    const checked = ev.target.checked;
+    if (checked) {
+      setSelectedExtras((prev) => [...prev, extraThing]);
+    } else {
+      setSelectedExtras((prev) => {
+        return prev.filter((e) => e.name !== extraThing.name);
+      });
+    }
+  }
+
+  //calculate the total price
+  let selectedPrice = basePrice;
+  if (selectedSize) {
+    selectedPrice += selectedSize.price;
+  }
+  if (selectedExtras?.length > 0) {
+    for (const extra of selectedExtras) {
+      selectedPrice += extra.price;
+    }
+  }
+
   return (
-    <div className="bg-gray-200 p-4 rounded-lg text-center hover:bg-white hover:shadow-md transition-all">
-      <div className="flex items-center justify-center">
-        <img src="/pizza.png" className="max-h-24" alt="pizza"></img>
-      </div>
+    <>
+      {showPopup && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center"
+          onClick={() => setShowPopup(false)}
+        >
+          <div
+            className="my-8 bg-white p-2 rounded-lg max-w-md"
+            onClick={(ev) => ev.stopPropagation()} //to only make the click event propagate within this div it self
+          >
+            <div
+              className="overflow-y-scroll p-2"
+              style={{ maxHeight: "calc(100vh - 100px)" }} //full height of the screen - 100px
+            >
+              <Image
+                src={image}
+                alt={name}
+                width={300}
+                height={200}
+                className="mx-auto"
+              />
+              <h2 className="text-lg font-bold text-center mb-2">{name}</h2>
+              <p className="text-center text-gray-500 text-sm mb-2">
+                {description}
+              </p>
 
-      <h4 className="font-semibold my-2">Pepperoni Pizza</h4>
-      <p className="text-gray-500 text-sm">
-        fadsfwgrehjtrjngbdfvrhtrmn bfsvsdvxvcxbxcv
-      </p>
-      <button className="mt-4 bg-primary text-white rounded-full px-4 py-2">
-        Add to cart
-      </button>
-    </div>
+              {sizes?.length > 0 && (
+                <div className="py-2">
+                  <h3 className="text-center text-gray-700">Pick your size</h3>
+                  {sizes.map((size) => (
+                    <label
+                      key={size._id}
+                      className="flex items-center gap-2 p-4 border rounded-md mb-1"
+                    >
+                      <input
+                        type="radio"
+                        onChange={() => setSelectedSize(size)}
+                        checked={selectedSize?.name === size.name}
+                        name="size"
+                      />
+                      {size.name} ${basePrice + size.price}
+                    </label>
+                  ))}
+                </div>
+              )}
+              {extraIngredientPrices?.length > 0 && (
+                <div className="py-2">
+                  <h3 className="text-center text-gray-700">Any extras?</h3>
+                  {/* {JSON.stringify({ selectedExtras })} */}
+                  {extraIngredientPrices.map((extraThing) => (
+                    <label
+                      key={extraThing._id}
+                      className="flex items-center gap-2 p-4 border rounded-md mb-1"
+                    >
+                      <input
+                        type="checkbox"
+                        name={extraThing.name}
+                        onClick={(ev) => handleExtraThingClick(ev, extraThing)}
+                      />
+                      {extraThing.name} +${extraThing.price}
+                    </label>
+                  ))}
+                </div>
+              )}
+              <button
+                type="button"
+                className="primary sticky bottom-2"
+                onClick={handleAddToCartButtonClick}
+              >
+                add ${selectedPrice}
+              </button>
+              <button
+                type="button"
+                className="mt-2"
+                onClick={() => setShowPopup(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <MenuItemTile onAddToCart={handleAddToCartButtonClick} {...menuItem} />
+    </>
   );
 }
