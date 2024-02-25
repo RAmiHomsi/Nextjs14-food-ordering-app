@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function MenuItemTile({ onAddToCart, ...item }) {
   const { image, description, name, basePrice, sizes, extraIngredientPrices } =
     item;
@@ -5,7 +7,7 @@ export default function MenuItemTile({ onAddToCart, ...item }) {
   return (
     <div className="bg-gray-200 p-4 rounded-lg text-center hover:bg-white hover:shadow-md transition-all">
       <div className="flex items-center justify-center">
-        <img src={image} className="max-h-24" alt="pizza"></img>
+        <Image src={image} className="max-h-24" alt="pizza"></Image>
       </div>
 
       <h4 className="font-semibold my-2">{name}</h4>

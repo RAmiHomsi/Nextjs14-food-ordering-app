@@ -67,7 +67,9 @@ export default function MenuItemForm({ onSubmit, menuItem }) {
             value={category}
             onChange={(ev) => setCategory(ev.target.value)}
           >
-            <option value="">Choose a category</option>
+            <option value="" disabled selected>
+              Choose a Category
+            </option>
             {categories?.length > 0 &&
               categories.map((c) => (
                 <option key={c._id} value={c._id}>

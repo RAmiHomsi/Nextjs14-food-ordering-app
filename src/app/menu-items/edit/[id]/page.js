@@ -21,7 +21,7 @@ export default function EditMenuItemPage() {
         setMenuItem(item);
       });
     });
-  }, []);
+  }, [id]);
 
   if (loading) {
     return "loading...";
