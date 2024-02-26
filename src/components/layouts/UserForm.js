@@ -56,7 +56,7 @@ export default function UserForm({ user, onSave }) {
         <input
           type="email"
           disabled={true}
-          value={user.email}
+          value={user?.email}
           placeholder={"email"}
         />
         <AddressInputs

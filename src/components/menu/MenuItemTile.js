@@ -7,7 +7,13 @@ export default function MenuItemTile({ onAddToCart, ...item }) {
   return (
     <div className="bg-gray-200 p-4 rounded-lg text-center hover:bg-white hover:shadow-md transition-all">
       <div className="flex items-center justify-center">
-        <Image src={image} className="max-h-24" alt="pizza"></Image>
+        <Image
+          src={image}
+          width={200}
+          height={200}
+          className="max-h-24"
+          alt="pizza"
+        ></Image>
       </div>
 
       <h4 className="font-semibold my-2">{name}</h4>

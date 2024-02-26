@@ -1,4 +1,5 @@
 "use client";
+
 import UseProfile from "@/components/UseProfile";
 import UserTabs from "@/components/layouts/UserTabs";
 import Link from "next/link";
@@ -32,11 +33,11 @@ export default function UsersPage() {
           users.map((user) => (
             <div
               key={user._id}
-              className="bg-gray-200 rounded-lg mb-2 p-1 px-4 flex items-center gap-4"
+              className="bg-gray-100 rounded-lg mb-2 p-1 px-4 flex items-center gap-4"
             >
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 grow">
                 <div className="text-gray-900">
-                  {!user.name && <span>{user.name}</span>}
+                  {!!user.name && <span>{user.name}</span>}
                   {!user.name && <span className="italic">No name</span>}
                 </div>
                 <span className="text-gray-500">{user.email}</span>
