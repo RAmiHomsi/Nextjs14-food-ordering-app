@@ -74,13 +74,13 @@ export default function CartPage() {
       <div className="text-center">
         <SectionHeaders mainHeader="Cart" />
       </div>
-      <div className="mt-8 grid gap-8 grid-cols-2">
+      <div className="mt-8 grid gap-8 md:grid-cols-2">
         <div>
           {cartProducts?.length === 0 && <div>Your cart is empty</div>}
           {cartProducts?.length > 0 &&
             cartProducts.map((product, index) => (
               <div
-                key={product._id}
+                key={index}
                 className="flex items-center gap-4 mb-2 border-b py-4"
               >
                 <div className="w-24">
@@ -100,8 +100,8 @@ export default function CartPage() {
                   )}
                   {product.extras?.length > 0 && (
                     <div className="text-sm text-gray-500">
-                      {product.extras.map((extra) => (
-                        <div key={extra.name}>
+                      {product.extras.map((extra, index) => (
+                        <div key={index}>
                           {extra.name} ${extra.price}
                         </div>
                       ))}
@@ -148,7 +148,11 @@ export default function CartPage() {
               addressProps={address}
               setAddressProp={handleAddressChange}
             />
-            <button type="submit">Pay ${subtotal + 5}</button>
+            {cartProducts.length > 0 ? (
+              <button type="submit">Pay ${subtotal + 5}</button>
+            ) : (
+              <button type="submit">Pay $0</button>
+            )}
           </form>
         </div>
       </div>

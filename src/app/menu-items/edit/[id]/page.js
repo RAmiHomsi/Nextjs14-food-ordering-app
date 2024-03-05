@@ -90,9 +90,14 @@ export default function EditMenuItemPage() {
         </Link>
       </div>
       <MenuItemForm menuItem={menuItem} onSubmit={handleSave} />
-      <div className="max-w-md mx-auto mt-2">
-        <div className="max-w-xs ml-auto pl-4">
-          <button onClick={handleDeleteClick}>Delete</button>
+      <div className="max-w-md mx-auto mt-2 flex justify-center">
+        <div className="max-w-xs">
+          <button
+            className=" hover:bg-red-700 hover:text-white font-bold py-2 px-4 rounded-full"
+            onClick={handleDeleteClick}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </section>

@@ -43,7 +43,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="relative">
+      <div className="relative hidden md:block">
         <Image
           src={"/pizza.png"}
           layout={"fill"}
