@@ -5,6 +5,7 @@ import { User } from "@/app/models/User";
 import NextAuth, { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import UserInfos from "@/app/models/UserInfos";
 //import { MongoDBAdapter } from "@auth/mongodb-adapter"
 
 export const authOptions = {
@@ -43,6 +44,19 @@ export const authOptions = {
     }),
   ],
 };
+
+export async function isAdmin() {
+  const session = await getServerSession(authOptions);
+  const userEmail = session?.user?.email;
+  if (!userEmail) {
+    return false;
+  }
+  const userInfo = await UserInfos.findOne({ email: userEmail });
+  if (!userInfo) {
+    return false;
+  }
+  return userInfo.admin;
+}
 
 const handler = NextAuth(authOptions);
 

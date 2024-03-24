@@ -136,12 +136,24 @@ export default function CartPage() {
               </div>
             ))}
 
-          <div className="py-4 text-right pr-16">
-            <span className="text-gray-500">Total:</span>
-            <span className="text-lg font-semibold pl-2">${subtotal}</span>
+          <div className="py-2 pr-16 flex justify-end items-center">
+            <div className="text-gray-500">
+              Subtotal:
+              <br />
+              Delivery:
+              <br />
+              Total:
+            </div>
+            <div className="font-semibold pl-2 text-right">
+              ${subtotal}
+              <br />
+              $5
+              <br />
+              {cartProducts.length > 0 ? `$${subtotal + 5}` : `$${subtotal}`}
+            </div>
           </div>
         </div>
-        <div className="bg-gray-200 p-4 rounded-lg">
+        <div className="bg-gray-100 p-4 rounded-lg">
           <h2>Checkout</h2>
           <form onSubmit={proceedToCheckout}>
             <AddressInputs

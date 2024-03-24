@@ -1,5 +1,5 @@
+"use client";
 import { useContext, useState } from "react";
-import toast from "react-hot-toast";
 import { CartContext } from "../AppContext";
 import MenuItemTile from "./MenuItemTile";
 import Image from "next/image";
